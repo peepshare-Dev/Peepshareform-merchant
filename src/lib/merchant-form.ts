@@ -1,5 +1,5 @@
-// Replace with your deployed Google Apps Script Web App URL.
-export const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/REPLACE_WITH_YOUR_SCRIPT_ID/exec";
+export const GOOGLE_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbzLNqFbR-TUzjiN3pOgF0WnpWC7y0Q1TmyQFcwAzDhmx2V5Z9wqmJCE4qTzGIm367a0/exec";
 
 export const CATEGORY_OPTIONS = [
   "ร้านอาหาร",
@@ -111,18 +111,36 @@ export function fileToUploadedFile(file: File): Promise<UploadedFile> {
 
 export async function submitMerchantForm(values: MerchantFormValues): Promise<void> {
   const payload = {
-    ...values,
-    submittedAt: new Date().toISOString(),
+    storeName: values.storeName,
+    googleMapsLink: values.mapsLink,
+    openingHours: values.openingHours,
+    contactName: values.contactName,
+    contactPhone: values.contactPhone,
+    storeCategory: values.category,
+    contactChannel: values.contactChannels,
+    promotionDetail: values.promotionDetails,
+    storeDescription: values.storeDescription,
+    note: "",
   };
 
   const res = await fetch(GOOGLE_SCRIPT_URL, {
     method: "POST",
-    // text/plain avoids a CORS preflight against Google Apps Script.
-    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
   });
 
   if (!res.ok) {
     throw new Error(`Submit failed with status ${res.status}`);
+  }
+
+  let result: { success?: boolean; error?: string };
+  try {
+    result = (await res.json()) as { success?: boolean; error?: string };
+  } catch {
+    throw new Error("Google Apps Script returned an invalid response");
+  }
+
+  if (result.success !== true) {
+    throw new Error(result.error ?? "Google Apps Script could not save the form");
   }
 }
