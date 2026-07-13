@@ -1,5 +1,5 @@
 export const GOOGLE_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbzLNqFbR-TUzjiN3pOgF0WnpWC7y0Q1TmyQFcwAzDhmx2V5Z9wqmJCE4qTzGIm367a0/exec";
+  "https://script.google.com/macros/s/AKfycbwAg_-qWxo6ja3hn7zKWIbqpkW3vDwgpd4Bfg9sWgitHomz3yZvaDveofa8TYPcQ1l7/exec";
 
 export const CATEGORY_OPTIONS = [
   "ร้านอาหาร",
@@ -30,6 +30,13 @@ export interface MerchantFormValues {
   storeDescription: string;
   photos: UploadedFile[];
   consent: boolean;
+}
+
+export interface MerchantSubmissionResult {
+  success: true;
+  message?: string;
+  rowNumber?: number;
+  submittedAt?: string;
 }
 
 export const emptyMerchantForm: MerchantFormValues = {
@@ -109,31 +116,31 @@ export function fileToUploadedFile(file: File): Promise<UploadedFile> {
   });
 }
 
-export async function submitMerchantForm(values: MerchantFormValues): Promise<void> {
-  const payload = {
-    storeName: values.storeName,
-    googleMapsLink: values.mapsLink,
-    openingHours: values.openingHours,
-    contactName: values.contactName,
-    contactPhone: values.contactPhone,
-    storeCategory: values.category,
-    contactChannel: values.contactChannels,
-    promotionDetail: values.promotionDetails,
-    storeDescription: values.storeDescription,
-    note: "",
-  };
+export async function submitMerchantForm(
+  values: MerchantFormValues,
+): Promise<MerchantSubmissionResult> {
+  const formData = new FormData();
+  formData.append("storeName", values.storeName);
+  formData.append("googleMapsLink", values.mapsLink);
+  formData.append("openingHours", values.openingHours);
+  formData.append("contactName", values.contactName);
+  formData.append("contactPhone", values.contactPhone);
+  formData.append("storeCategory", values.category);
+  formData.append("contactChannel", values.contactChannels);
+  formData.append("promotionDetail", values.promotionDetails);
+  formData.append("storeDescription", values.storeDescription || "");
+  formData.append("note", "");
 
   const res = await fetch(GOOGLE_SCRIPT_URL, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
+    body: formData,
   });
 
   if (!res.ok) {
     throw new Error(`Submit failed with status ${res.status}`);
   }
 
-  let result: { success?: boolean; error?: string };
+  let result: MerchantSubmissionResult | { success?: boolean; error?: string };
   try {
     result = (await res.json()) as { success?: boolean; error?: string };
   } catch {
@@ -141,6 +148,10 @@ export async function submitMerchantForm(values: MerchantFormValues): Promise<vo
   }
 
   if (result.success !== true) {
-    throw new Error(result.error ?? "Google Apps Script could not save the form");
+    throw new Error(
+      "error" in result && result.error ? result.error : "Google Apps Script could not save the form",
+    );
   }
+
+  return result;
 }
