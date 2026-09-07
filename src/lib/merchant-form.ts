@@ -1,5 +1,5 @@
 export const GOOGLE_SCRIPT_URL =
-  "https://script.google.com/macros/s/AKfycbwAg_-qWxo6ja3hn7zKWIbqpkW3vDwgpd4Bfg9sWgitHomz3yZvaDveofa8TYPcQ1l7/exec";
+  "https://script.google.com/macros/s/AKfycbxQD_S_NnJkaJQC8BedjCUM5buWH_ZwCFSpM96tgwtK6Tw3rRQZeQyDeolt4GYQIQ7j/exec";
 
 export const CATEGORY_OPTIONS = [
   "ร้านอาหาร",
@@ -130,6 +130,7 @@ export async function submitMerchantForm(
   formData.append("promotionDetail", values.promotionDetails);
   formData.append("storeDescription", values.storeDescription || "");
   formData.append("note", "");
+  formData.append("consentStatus", String(values.consent));
 
   const res = await fetch(GOOGLE_SCRIPT_URL, {
     method: "POST",

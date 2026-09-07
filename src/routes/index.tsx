@@ -16,7 +16,7 @@ const BENEFITS = [
 
 function Index() {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="aurora-background min-h-screen">
       <div className="mx-auto w-full max-w-[860px] px-4 py-10 sm:px-6 sm:py-14">
         {/* Header */}
         <header className="text-center">
@@ -33,7 +33,7 @@ function Index() {
         </header>
 
         {/* Info card */}
-        <section className="mt-8 rounded-2xl border border-border bg-card p-6 shadow-card sm:p-7">
+        <section className="mt-8 rounded-2xl border border-border bg-card/95 p-6 shadow-card backdrop-blur-sm sm:p-7">
           <h2 className="text-base font-semibold text-foreground">
             ร้านค้าที่ลงทะเบียนกับ PEEP SHARE จะได้รับ:
           </h2>
@@ -50,7 +50,7 @@ function Index() {
         </section>
 
         {/* Form card */}
-        <main className="mt-6 rounded-2xl border border-border bg-card p-6 shadow-card sm:p-8">
+        <main className="mt-6 rounded-2xl border border-border bg-card/95 p-6 shadow-card backdrop-blur-sm sm:p-8">
           <div className="mb-6 flex items-center gap-2 text-sm font-medium text-muted-foreground">
             <Check className="size-4 text-brand" />
             ช่องที่มีเครื่องหมาย <span className="text-destructive">*</span> จำเป็นต้องกรอก

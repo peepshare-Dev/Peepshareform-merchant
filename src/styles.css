@@ -159,3 +159,32 @@
 @utility shadow-card {
   box-shadow: var(--shadow-card);
 }
+
+@keyframes aurora-drift {
+  0%,
+  100% {
+    background-position: 0% 0%, 100% 15%, 45% 100%, 92% 85%, 50% 50%;
+  }
+
+  50% {
+    background-position: 12% 8%, 82% 0%, 58% 88%, 84% 76%, 50% 50%;
+  }
+}
+
+.aurora-background {
+  background-color: oklch(0.965 0.042 65);
+  background-image:
+    radial-gradient(ellipse 78% 52% at 55% 42%, oklch(0.83 0.16 62 / 0.8), transparent 72%),
+    radial-gradient(ellipse 62% 48% at -8% 26%, oklch(0.78 0.17 20 / 0.5), transparent 72%),
+    radial-gradient(ellipse 66% 48% at 25% 83%, oklch(0.84 0.14 335 / 0.42), transparent 74%),
+    radial-gradient(ellipse 70% 52% at 96% 84%, oklch(0.77 0.17 38 / 0.42), transparent 72%),
+    linear-gradient(145deg, oklch(0.99 0.018 80), oklch(0.93 0.08 67) 52%, oklch(0.97 0.035 30));
+  background-size: 138% 138%, 132% 132%, 142% 142%, 136% 136%, 100% 100%;
+  animation: aurora-drift 18s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aurora-background {
+    animation: none;
+  }
+}

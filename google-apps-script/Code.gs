@@ -7,7 +7,7 @@
 const HEADERS = [
   'Submitted at', 'Store name', 'Google Maps URL', 'Opening hours',
   'Contact name', 'Contact phone', 'Store category', 'Contact channel',
-  'Promotion detail', 'Store description', 'Note',
+  'Promotion detail', 'Store description', 'Note', 'Consent status',
 ];
 
 function doPost(e) {
@@ -29,6 +29,7 @@ function doPost(e) {
       payload.promotionDetail || '',
       payload.storeDescription || '',
       payload.note || '',
+      payload.consentStatus || '',
     ]);
     return json_({
       success: true,
